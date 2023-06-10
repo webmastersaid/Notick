@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VUE basics</title>
+    <style>
+        [v-cloak] {
+            display: none;
+        }
+    </style>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.3/font/bootstrap-icons.css">
+</head>
+
+<body class="bg-dark">
+    <div id="app" class="container" v-cloak>
+        <div class="bg-white pt-2 pb-2 ps-4 pe-4 rounded-bottom">
+            <div class="pb-4">
+                <h1>{{ todoTitle }}</h1>
+            </div>
+            <div class="input-group mb-3">
+                <input type="text" class="form-control" ref="todoInput" :placeholder="todoPlaceholder"
+                    v-model="todoValue" @keypress.enter="todoAdd">
+                <button type="button" class="btn btn-outline-primary" @click="todoAdd"><span
+                        v-html="btnAdd"></span></button>
+            </div>
+            <div class="form-check form-check-inline">
+                <input class="form-check-input" type="checkbox" id="bold" v-model="isBold">
+                <label class="form-check-label" for="bold">
+                    <i class="bi bi-type-bold"></i>
+                </label>
+            </div>
+            <div class="form-check form-check-inline">
+                <input class="form-check-input" type="checkbox" id="uppercase" v-model="isUpperCase">
+                <label class="form-check-label" for="uppercase">
+                    <i class="bi bi-capslock"></i>
+                </label>
+            </div>
+            <hr>
+            <ul class="list-group" :class="todoListCount > 3 ? 'overflow-y-scroll' : ''" style="height: 400px;"
+                v-if="todoListCount !== 0">
+                <li class="list-group-item d-flex justify-content-between" v-for="(todoItem, index) in todoList" :key="todoItem"
+                    :class="todoItemClass(todoItem)" @click="todoSelect(todoItem)">
+                        <div>
+                            <span class="bold">{{ index + 1 }}. </span>
+                            <span :class="todoTextClass(todoItem)">
+                                {{ todoItem.note}}
+                            </span>
+                        </div>
+                        <div>
+                            <button type="button" class="btn m-1"
+                                :class="todoItem.properties.isDone ? 'btn-success' : 'btn-outline-success'"
+                                @click="todoDone(todoItem)"><span v-html="btnDone"></span></button>
+                            <button type="button" class="btn btn-outline-danger m-1" @click="todoRemove(index)"><span
+                                    v-html="btnRemove"></span></button>
+                        </div>
+                </li>
+            </ul>
+            <div class="alert alert-info" role="alert" v-else>
+                <div class="fw-bold">Add the first note</div>
+            </div>
+            <div v-show="todoListCount > 0">
+                <hr>
+                <div class="alert alert-secondary" role="alert">
+                    <div class="fw-bold">Count: {{ todoListCount }}</div>
+                </div>
+            </div>
+        </div>
+        <div id="loader" class="text-center" v-cloak>
+            <div class="spinner-border text-light" role="status">
+                <span class="visually-hidden">Loading...</span>
+            </div>
+        </div>
+    </div>
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+    <script src="app.js"></script>
+</body>
+
+</html>
